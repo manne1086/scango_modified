@@ -1,0 +1,6 @@
+{
+  "success": true,
+  "message": "User App sync confirmed via database polling",
+  "receiptNumber": "RCP-SYNC-2174",
+  "dbStatus": "VERIFIED"
+}

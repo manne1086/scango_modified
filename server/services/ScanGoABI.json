@@ -1,0 +1,60 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "orderHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "createOrder",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "orderHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "isValid",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "orderHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "markPaid",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "orderHash",
+        "type": "bytes32"
+      }
+    ],
+    "name": "verifyOrder",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
