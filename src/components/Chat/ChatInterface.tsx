@@ -6,6 +6,7 @@ import {
   Minimize2,
   Mic,
   MicOff,
+  Paperclip,
 } from "lucide-react";
 import { aiService, ChatMessage } from "../../services/ai.service";
 import { Store } from "../../types";
@@ -27,9 +28,50 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ store }) => {
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [fileContent, setFileContent] = useState<string | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setFileName(file.name);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target?.result as string;
+      setFileContent(content);
+      // Automatically inform the user that file is attached
+      const systemMsg: ChatMessage = {
+        id: Date.now().toString(),
+        sender: "ai",
+        text: `Attached file: ${file.name}. You can now ask me to analyze this list or find these items in the store.`,
+        timestamp: Date.now(),
+      };
+      setMessages((prev) => [...prev, systemMsg]);
+    };
+
+    if (file.type === "text/plain" || file.name.endsWith(".txt") || file.name.endsWith(".csv")) {
+      reader.readAsText(file);
+    } else {
+      // For PDF/DOC, in a real app we'd use a library. 
+      // For this hackathon/demo, we'll simulate text extraction or notify the user.
+      setFileContent(`[Simulated extraction from ${file.name}]`);
+      const systemMsg: ChatMessage = {
+        id: Date.now().toString(),
+        sender: "ai",
+        text: `I've received ${file.name}. Note: Advanced PDF/DOC extraction is simulated in this demo. I will try to match items based on the filename or common patterns.`,
+        timestamp: Date.now(),
+      };
+      setMessages((prev) => [...prev, systemMsg]);
+    }
+
+    // Reset input value so the same file can be selected again
+    e.target.value = "";
+  };
 
   const startRecording = async () => {
     try {
@@ -113,7 +155,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ store }) => {
     setIsTyping(true);
 
     try {
-      const responseText = await aiService.processQuery(userMsg.text, store?.id || "");
+      const responseText = await aiService.processQuery(userMsg.text, store?.id || "", fileContent || undefined);
 
       const aiMsg: ChatMessage = {
         id: (Date.now() + 1).toString(),
@@ -123,6 +165,10 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ store }) => {
       };
       setMessages((prev) => [...prev, aiMsg]);
       speak(responseText);
+      
+      // Reset file after sending
+      setFileContent(null);
+      setFileName(null);
     } catch (err) {
       const errorMsg = "Sorry, I'm having trouble connecting right now.";
       setMessages((prev) => [
