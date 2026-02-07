@@ -138,7 +138,7 @@ export const historyApi = {
 };
 
 export const checkoutApi = {
-    createOrder: async (items: CartItem[], paymentMethod: PaymentMethod, storeName: string): Promise<Order> => {
+    createOrder: async (items: CartItem[], paymentMethod: PaymentMethod, storeName: string, walletAddress?: string): Promise<Order> => {
         const totalAmount = items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
         const totalDiscount = items.reduce((acc, item) => acc + ((item.mrp - item.price) * item.quantity), 0);
         const receiptNumber = `RCP-${Math.floor(100000 + Math.random() * 900000)}`;
@@ -180,7 +180,7 @@ export const checkoutApi = {
             const response = await fetch(`${API_CONFIG.BASE_URL}/orders/checkout`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ cart: items, total: totalAmount, storeId, paymentMethod })
+                body: JSON.stringify({ cart: items, total: totalAmount, storeId, paymentMethod, userWallet: walletAddress })
             });
             console.log(`📡 Response status: ${response.status}`);
 
@@ -305,6 +305,19 @@ export const guardApi = {
         } catch (e) {
             console.error("Guard API Error", e);
             return { success: false, status: 'NETWORK_ERROR' };
+        }
+    }
+};
+
+export const userApi = {
+    getByWallet: async (walletAddress: string): Promise<{ rewardBalance: number }> => {
+        try {
+            const response = await fetch(`${API_CONFIG.BASE_URL}/users/${walletAddress}`);
+            if (!response.ok) return { rewardBalance: 0 };
+            return await response.json();
+        } catch (e) {
+            console.error("Failed to fetch user data", e);
+            return { rewardBalance: 0 };
         }
     }
 };

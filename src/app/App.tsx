@@ -110,7 +110,7 @@ const App: React.FC = () => {
       setIsProcessing(true);
       setError(null);
       try {
-         const order = await checkoutApi.createOrder(cart, method, selectedStore.name);
+         const order = await checkoutApi.createOrder(cart, method, selectedStore.name, user?.walletAddress);
          setCurrentOrder(order);
          setCurrentScreen('SUCCESS');
       } catch (err) {
@@ -240,7 +240,7 @@ const App: React.FC = () => {
          {currentScreen === 'SUCCESS' && ( // Mapped to QR Page
             <QR
                currentOrder={currentOrder}
-               onFinish={() => { setCurrentOrder(null); setCart([]); navigateTo('HOME'); }}
+               onFinish={() => { setCurrentOrder(null); setCart([]); setCurrentScreen('HOME'); }}
             />
          )}
 

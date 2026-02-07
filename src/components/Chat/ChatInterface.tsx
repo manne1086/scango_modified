@@ -6,6 +6,7 @@ import {
   Minimize2,
   Mic,
   MicOff,
+  Paperclip,
 } from "lucide-react";
 import { aiService, ChatMessage } from "../../services/ai.service";
 import { Store } from "../../types";
@@ -27,9 +28,50 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ store }) => {
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [fileContent, setFileContent] = useState<string | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setFileName(file.name);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target?.result as string;
+      setFileContent(content);
+      // Automatically inform the user that file is attached
+      const systemMsg: ChatMessage = {
+        id: Date.now().toString(),
+        sender: "ai",
+        text: `Attached file: ${file.name}. You can now ask me to analyze this list or find these items in the store.`,
+        timestamp: Date.now(),
+      };
+      setMessages((prev) => [...prev, systemMsg]);
+    };
+
+    if (file.type === "text/plain" || file.name.endsWith(".txt") || file.name.endsWith(".csv")) {
+      reader.readAsText(file);
+    } else {
+      // For PDF/DOC, in a real app we'd use a library. 
+      // For this hackathon/demo, we'll simulate text extraction or notify the user.
+      setFileContent(`[Simulated extraction from ${file.name}]`);
+      const systemMsg: ChatMessage = {
+        id: Date.now().toString(),
+        sender: "ai",
+        text: `I've received ${file.name}. Note: Advanced PDF/DOC extraction is simulated in this demo. I will try to match items based on the filename or common patterns.`,
+        timestamp: Date.now(),
+      };
+      setMessages((prev) => [...prev, systemMsg]);
+    }
+
+    // Reset input value so the same file can be selected again
+    e.target.value = "";
+  };
 
   const startRecording = async () => {
     try {
@@ -113,7 +155,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ store }) => {
     setIsTyping(true);
 
     try {
-      const responseText = await aiService.processQuery(userMsg.text, store?.id || "");
+      const responseText = await aiService.processQuery(userMsg.text, store?.id || "", fileContent || undefined);
 
       const aiMsg: ChatMessage = {
         id: (Date.now() + 1).toString(),
@@ -123,6 +165,10 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ store }) => {
       };
       setMessages((prev) => [...prev, aiMsg]);
       speak(responseText);
+      
+      // Reset file after sending
+      setFileContent(null);
+      setFileName(null);
     } catch (err) {
       const errorMsg = "Sorry, I'm having trouble connecting right now.";
       setMessages((prev) => [
@@ -180,11 +226,10 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ store }) => {
                 className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`max-w-[85%] p-3 rounded-2xl text-sm leading-relaxed shadow-sm ${
-                    msg.sender === "user"
-                      ? "bg-gray-800 text-white rounded-tr-none"
-                      : "bg-white text-gray-800 border border-gray-100 rounded-tl-none"
-                  }`}
+                  className={`max-w-[85%] p-3 rounded-2xl text-sm leading-relaxed shadow-sm ${msg.sender === "user"
+                    ? "bg-gray-800 text-white rounded-tr-none"
+                    : "bg-white text-gray-800 border border-gray-100 rounded-tl-none"
+                    }`}
                 >
                   {msg.text}
                 </div>
@@ -206,11 +251,10 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ store }) => {
           <div className="p-3 bg-white border-t border-gray-100 flex gap-2">
             <button
               onClick={toggleListening}
-              className={`p-3 rounded-xl transition shadow-md ${
-                isListening
-                  ? "bg-red-500 text-white animate-pulse"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-              }`}
+              className={`p-3 rounded-xl transition shadow-md ${isListening
+                ? "bg-red-500 text-white animate-pulse"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                }`}
               title={isListening ? "Stop listening" : "Start voice-to-text"}
             >
               {isListening ? <MicOff size={18} /> : <Mic size={18} />}
@@ -221,11 +265,10 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ store }) => {
               onChange={(e) => setInputValue(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSend()}
               placeholder={isListening ? "Listening... Speak now!" : "Ask about items..."}
-              className={`flex-1 border-none outline-none rounded-xl px-4 py-3 text-sm font-medium transition ${
-                isListening
-                  ? "bg-red-50 ring-2 ring-red-200"
-                  : "bg-gray-100 focus:ring-2 focus:ring-[#007041]/10"
-              }`}
+              className={`flex-1 border-none outline-none rounded-xl px-4 py-3 text-sm font-medium transition ${isListening
+                ? "bg-red-50 ring-2 ring-red-200"
+                : "bg-gray-100 focus:ring-2 focus:ring-[#007041]/10"
+                }`}
               autoFocus
             />
             <button
