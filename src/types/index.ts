@@ -28,7 +28,7 @@ export interface Store {
 }
 
 // Added LOGIN to Screen types
-export type Screen = 'LOGIN' | 'STORE_SELECT' | 'HOME' | 'SCANNER' | 'CART' | 'PAYMENT' | 'SUCCESS' | 'HISTORY' | 'EMPLOYEE_LOGIN' | 'EMPLOYEE_HOME' | 'EMPLOYEE_ACTION' | 'DOCS';
+export type Screen = 'LOGIN' | 'STORE_SELECT' | 'HOME' | 'CATEGORIES' | 'PROFILE' | 'SCANNER' | 'CART' | 'PAYMENT' | 'SUCCESS' | 'HISTORY' | 'EMPLOYEE_LOGIN' | 'EMPLOYEE_HOME' | 'EMPLOYEE_ACTION' | 'DOCS';
 
 export * from './product';
 export * from './order';

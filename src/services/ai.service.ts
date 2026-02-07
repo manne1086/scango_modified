@@ -11,6 +11,10 @@ export interface ChatMessage {
 
 const GROQ_API_KEY = import.meta.env.VITE_GROQ_API_KEY;
 
+if (!GROQ_API_KEY) {
+  console.error("AI Assistant Error: VITE_GROQ_API_KEY is not defined in your environment variables (.env or .env.local). Please restart your development server (npm run dev) after adding it.");
+}
+
 export const aiService = {
   processQuery: async (query: string, storeId: string): Promise<string> => {
     if (!GROQ_API_KEY) {

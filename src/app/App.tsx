@@ -12,6 +12,8 @@ import { Cart } from '../pages/Cart';
 import { Checkout } from '../pages/Checkout';
 import { QR } from '../pages/QR';
 import { History } from '../pages/History';
+import { Categories } from '../pages/Categories';
+import { Profile } from '../pages/Profile';
 import { EmployeeHome, EmployeeScanner } from '../pages/Employee';
 import SystemArchitecture from '../components/SystemArchitecture';
 import { ChevronLeft } from 'lucide-react';
@@ -20,6 +22,14 @@ import { ChatInterface } from '../components/Chat/ChatInterface';
 const App: React.FC = () => {
    // --- STATE MANAGEMENT ---
    const [currentScreen, setCurrentScreen] = useState<Screen>('LOGIN');
+   const [historyBackScreen, setHistoryBackScreen] = useState<Screen>('HOME');
+
+   const navigateTo = (screen: Screen) => {
+      if (screen === 'HISTORY') {
+         setHistoryBackScreen(currentScreen);
+      }
+      setCurrentScreen(screen);
+   };
 
    // User & Store
    const [user, setUser] = useState<User | null>(null);
@@ -113,17 +123,17 @@ const App: React.FC = () => {
    const handleStoreSelect = useCallback((s: Store) => {
       setSelectedStore(s);
       setCart([]); // Reset cart on store switch
-      setCurrentScreen('HOME');
+      navigateTo('HOME');
    }, []);
 
    const handleLoginSuccess = (phone: string, name: string) => {
       setUser({ id: `user-${phone}`, phoneNumber: phone, name: name });
-      setCurrentScreen('STORE_SELECT');
+      navigateTo('STORE_SELECT');
    };
 
    // --- RENDER ---
    return (
-      <div className="max-w-md mx-auto bg-gray-50 min-h-screen shadow-2xl relative overflow-hidden font-sans">
+      <div className="max-w-md mx-auto bg-gray-50 h-[100dvh] shadow-2xl relative overflow-hidden font-sans">
 
          {/* Global Chat Interface - Conditional Render */}
          {selectedStore && !['LOGIN', 'EMPLOYEE_LOGIN', 'EMPLOYEE_HOME', 'EMPLOYEE_ACTION'].includes(currentScreen) && (
@@ -135,7 +145,7 @@ const App: React.FC = () => {
                onCustomerLogin={handleLoginSuccess}
                onEmployeeLogin={(emp) => {
                   setLoggedInEmployee(emp);
-                  setCurrentScreen('EMPLOYEE_HOME');
+                  navigateTo('EMPLOYEE_HOME');
                }}
             />
          )}
@@ -153,19 +163,46 @@ const App: React.FC = () => {
             <Home
                user={user}
                store={selectedStore}
-               onChangeScreen={setCurrentScreen}
-               onLogout={() => { setSelectedStore(null); setCurrentScreen('STORE_SELECT'); }}
+               cart={cart}
+               totalAmount={totalAmount}
+               onChangeScreen={navigateTo}
+               onLogout={() => { setSelectedStore(null); navigateTo('STORE_SELECT'); }}
             />
          )}
 
          {currentScreen === 'HISTORY' && (
-            <History onBack={() => setCurrentScreen('HOME')} />
+            <History 
+               onBack={() => navigateTo(historyBackScreen)} 
+               onChangeScreen={navigateTo}
+               cart={cart}
+               totalAmount={totalAmount}
+            />
+         )}
+
+         {currentScreen === 'CATEGORIES' && (
+            <Categories
+               user={user}
+               store={selectedStore}
+               cart={cart}
+               totalAmount={totalAmount}
+               onChangeScreen={navigateTo}
+               onLogout={() => { setSelectedStore(null); navigateTo('STORE_SELECT'); }}
+            />
+         )}
+
+         {currentScreen === 'PROFILE' && (
+            <Profile
+               user={user}
+               cart={cart}
+               totalAmount={totalAmount}
+               onChangeScreen={navigateTo}
+            />
          )}
 
          {currentScreen === 'SCANNER' && (
             <Scan
                store={selectedStore}
-               onScreenChange={setCurrentScreen}
+               onScreenChange={navigateTo}
                onScan={handleScan}
                manualInput={manualInput}
                setManualInput={setManualInput}
@@ -177,7 +214,6 @@ const App: React.FC = () => {
                addToCart={addToCart}
                cart={cart}
                error={error}
-               setError={setError}
                totalAmount={totalAmount}
             />
          )}
@@ -186,7 +222,7 @@ const App: React.FC = () => {
             <Cart
                cart={cart}
                updateQuantity={updateQuantity}
-               onScreenChange={setCurrentScreen}
+               onScreenChange={navigateTo}
                totalAmount={totalAmount}
                totalSavings={totalSavings}
             />
@@ -194,7 +230,7 @@ const App: React.FC = () => {
 
          {currentScreen === 'PAYMENT' && (
             <Checkout
-               onScreenChange={setCurrentScreen}
+               onScreenChange={navigateTo}
                totalAmount={totalAmount}
                handleCheckout={handleCheckout}
                isProcessing={isProcessing}
@@ -204,8 +240,7 @@ const App: React.FC = () => {
          {currentScreen === 'SUCCESS' && ( // Mapped to QR Page
             <QR
                currentOrder={currentOrder}
-               selectedStore={selectedStore}
-               onFinish={() => { setCurrentOrder(null); setCart([]); setCurrentScreen('HOME'); }}
+               onFinish={() => { setCurrentOrder(null); setCart([]); navigateTo('HOME'); }}
             />
          )}
 

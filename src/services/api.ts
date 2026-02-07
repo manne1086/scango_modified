@@ -84,7 +84,7 @@ export const otpApi = {
 export const authApi = {
     login: async (employeeId: string, password: string): Promise<Employee | null> => {
         if (isSupabaseConfigured()) {
-            const { data, error } = await supabase
+            const { data } = await supabase
                 .from('employees')
                 .select('*')
                 .eq('employee_id', employeeId)
@@ -106,7 +106,7 @@ export const authApi = {
 };
 
 export const storeApi = {
-    getNearestStore: async (lat: number, lng: number): Promise<Store> => {
+    getNearestStore: async (_lat: number, _lng: number): Promise<Store> => {
         // For now, return mock stores as geolocation logic is usually client-side calculation
         // or requires a geospatial PostGIS query which is advanced.
         await new Promise(r => setTimeout(r, 600));
@@ -231,7 +231,7 @@ export const cashierApi = {
     getReceiptStatus: async (receiptNumber: string): Promise<SQL_ReceiptStatus | null> => {
 
         if (isSupabaseConfigured()) {
-            const { data, error } = await supabase
+            const { data } = await supabase
                 .from('receipts')
                 .select('*')
                 .eq('receipt_number', receiptNumber)

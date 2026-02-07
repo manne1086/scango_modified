@@ -1,10 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import {
   MessageCircle,
-  X,
   Send,
   Bot,
-  User as UserIcon,
   Minimize2,
   Mic,
   MicOff,
@@ -143,15 +141,9 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ store }) => {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="absolute bottom-6 right-6 bg-[#007041] text-white p-4 rounded-full shadow-2xl z-50 hover:bg-green-800 transition-transform active:scale-95 animate-in slide-in-from-bottom-4"
+          className="absolute bottom-28 right-6 bg-primary text-white size-14 rounded-full shadow-2xl z-50 hover:bg-green-800 transition-transform active:scale-95 animate-in slide-in-from-bottom-4 flex items-center justify-center"
         >
-          <div className="relative">
-            <MessageCircle size={28} />
-            <span className="absolute -top-1 -right-1 flex h-3 w-3">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-yellow-500"></span>
-            </span>
-          </div>
+          <span className="material-symbols-outlined text-3xl">support_agent</span>
         </button>
       )}
 
@@ -237,7 +229,7 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ store }) => {
               autoFocus
             />
             <button
-              onClick={handleSend}
+              onClick={() => handleSend()}
               disabled={!inputValue.trim()}
               className="bg-[#007041] text-white p-3 rounded-xl hover:bg-green-800 disabled:opacity-50 disabled:cursor-not-allowed transition shadow-md"
             >

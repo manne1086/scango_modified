@@ -85,7 +85,6 @@ interface EmployeeScannerProps {
 }
 
 export const EmployeeScanner: React.FC<EmployeeScannerProps> = ({ mode, onBack }) => {
-    const [scannedData, setScannedData] = useState<string | null>(null);
     const [statusMsg, setStatusMsg] = useState<{ type: 'success' | 'error' | 'info', text: string } | null>(null);
     const [receiptDetails, setReceiptDetails] = useState<SQL_ReceiptStatus | null>(null);
     const [currentOrderHash, setCurrentOrderHash] = useState<string | null>(null);
@@ -94,7 +93,6 @@ export const EmployeeScanner: React.FC<EmployeeScannerProps> = ({ mode, onBack }
     const handleScan = async (code: string) => {
         if (processing) return;
         setProcessing(true);
-        setScannedData(code);
         setStatusMsg({ type: 'info', text: 'Validating QR...' });
 
         try {
