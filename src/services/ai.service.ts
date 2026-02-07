@@ -53,7 +53,7 @@ export const aiService = {
             .map((p) => {
               const inv = inventory.find((i) => i.barcode === p.barcode);
               if (!inv) return null;
-              return `Product: ${p.name}, Brand: ${p.brand}, Price: ₹${inv.store_price}, Category: ${p.category}, Location: Aisle ${inv.aisle || "N/A"}, Rack ${inv.rack || "N/A"}, Shelf ${inv.shelf || "N/A"}, Stock: ${inv.in_stock ? "Yes" : "No"}, Expiry: ${p.expiry_date || "N/A"}.`;
+              return `Product: ${p.name}, Brand: ${p.brand}, Price: ₹${inv.store_price}, Category: ${p.category}, Stock: ${inv.in_stock ? "Yes" : "No"}.`;
             })
             .filter(Boolean)
             .join("\n");
@@ -71,9 +71,7 @@ export const aiService = {
         .map((p) => {
           const inv = storeTable.find((i) => i.product_id === p.id);
           if (!inv) return null;
-          // Mocking some extra fields for the demo/local fallback
-          const expiry = p.category === "Instant Food" || p.category === "Staples" || p.category === "Beverages" || p.category === "Biscuits" ? "2025-12-31" : "N/A";
-          return `Product: ${p.name}, Brand: ${p.brand}, Price: ₹${inv.store_price}, Category: ${p.category}, Location: Aisle ${inv.location.aisle}, Rack ${inv.location.rack}, Shelf ${inv.location.shelf}, Stock: ${inv.in_stock ? "Yes" : "No"}, Expiry: ${expiry}.`;
+          return `Product: ${p.name}, Brand: ${p.brand}, Price: ₹${inv.store_price}, Category: ${p.category}, Stock: ${inv.in_stock ? "Yes" : "No"}.`;
         })
         .filter(Boolean)
         .join("\n");

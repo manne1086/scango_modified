@@ -1,10 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import {
   MessageCircle,
-  X,
   Send,
   Bot,
-  User as UserIcon,
   Minimize2,
   Mic,
   MicOff,
@@ -234,11 +232,10 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ store }) => {
                 className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
               >
                 <div
-                  className={`max-w-[85%] p-3 rounded-2xl text-sm leading-relaxed shadow-sm ${
-                    msg.sender === "user"
-                      ? "bg-gray-800 text-white rounded-tr-none"
-                      : "bg-white text-gray-800 border border-gray-100 rounded-tl-none"
-                  }`}
+                  className={`max-w-[85%] p-3 rounded-2xl text-sm leading-relaxed shadow-sm ${msg.sender === "user"
+                    ? "bg-gray-800 text-white rounded-tr-none"
+                    : "bg-white text-gray-800 border border-gray-100 rounded-tl-none"
+                    }`}
                 >
                   {msg.text}
                 </div>
@@ -257,63 +254,36 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({ store }) => {
           </div>
 
           {/* Input Area */}
-          <div className="p-3 bg-white border-t border-gray-100 flex flex-col gap-2">
-            {fileName && (
-              <div className="flex items-center gap-2 px-3 py-1 bg-green-50 text-[#007041] text-xs font-medium rounded-lg w-fit animate-in fade-in slide-in-from-left-2">
-                <Paperclip size={12} />
-                <span className="truncate max-w-[150px]">{fileName}</span>
-                <button onClick={() => {setFileContent(null); setFileName(null);}} className="hover:bg-green-100 p-0.5 rounded">
-                  <X size={12} />
-                </button>
-              </div>
-            )}
-            <div className="flex gap-2">
-              <input 
-                type="file" 
-                ref={fileInputRef} 
-                onChange={handleFileUpload} 
-                className="hidden" 
-                accept=".txt,.pdf,.doc,.docx,.csv"
-              />
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="p-3 bg-gray-100 text-gray-600 rounded-xl hover:bg-gray-200 transition shadow-md"
-                title="Upload list (PDF, DOC, TXT)"
-              >
-                <Paperclip size={18} />
-              </button>
-              <button
-                onClick={toggleListening}
-                className={`p-3 rounded-xl transition shadow-md ${
-                  isListening
-                    ? "bg-red-500 text-white animate-pulse"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+          <div className="p-3 bg-white border-t border-gray-100 flex gap-2">
+            <button
+              onClick={toggleListening}
+              className={`p-3 rounded-xl transition shadow-md ${isListening
+                ? "bg-red-500 text-white animate-pulse"
+                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                 }`}
-                title={isListening ? "Stop listening" : "Start voice-to-text"}
-              >
-                {isListening ? <MicOff size={18} /> : <Mic size={18} />}
-              </button>
-              <input
-                type="text"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                placeholder={isListening ? "Listening... Speak now!" : "Ask about items..."}
-                className={`flex-1 border-none outline-none rounded-xl px-4 py-3 text-sm font-medium transition ${
-                  isListening
-                    ? "bg-red-50 ring-2 ring-red-200"
-                    : "bg-gray-100 focus:ring-2 focus:ring-[#007041]/10"
+              title={isListening ? "Stop listening" : "Start voice-to-text"}
+            >
+              {isListening ? <MicOff size={18} /> : <Mic size={18} />}
+            </button>
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSend()}
+              placeholder={isListening ? "Listening... Speak now!" : "Ask about items..."}
+              className={`flex-1 border-none outline-none rounded-xl px-4 py-3 text-sm font-medium transition ${isListening
+                ? "bg-red-50 ring-2 ring-red-200"
+                : "bg-gray-100 focus:ring-2 focus:ring-[#007041]/10"
                 }`}
-                autoFocus
-              />
-              <button
-                onClick={handleSend}
-                disabled={!inputValue.trim() && !fileContent}
-                className="bg-[#007041] text-white p-3 rounded-xl hover:bg-green-800 disabled:opacity-50 disabled:cursor-not-allowed transition shadow-md"
-              >
-                <Send size={18} />
-              </button>
-            </div>
+              autoFocus
+            />
+            <button
+              onClick={() => handleSend()}
+              disabled={!inputValue.trim()}
+              className="bg-[#007041] text-white p-3 rounded-xl hover:bg-green-800 disabled:opacity-50 disabled:cursor-not-allowed transition shadow-md"
+            >
+              <Send size={18} />
+            </button>
           </div>
         </div>
       )}
