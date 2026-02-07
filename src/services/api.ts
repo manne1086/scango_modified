@@ -106,7 +106,7 @@ export const authApi = {
 };
 
 export const storeApi = {
-    getNearestStore: async (): Promise<Store> => {
+    getNearestStore: async (_lat: number, _lng: number): Promise<Store> => {
         // For now, return mock stores as geolocation logic is usually client-side calculation
         // or requires a geospatial PostGIS query which is advanced.
         await new Promise(r => setTimeout(r, 600));

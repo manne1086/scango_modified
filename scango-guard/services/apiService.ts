@@ -3,7 +3,7 @@ import { Employee, CashierResult, GuardResult } from '../types';
 import { dbEngine } from '../data/sqlDb';
 import { supabase } from './supabase';
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || (process.env as any).VITE_BACKEND_URL || 'http://localhost:5000';
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || (process.env as any).VITE_BACKEND_URL || 'https://localhost:5000';
 
 // --- API SERVICE ---
 

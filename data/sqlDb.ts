@@ -19,6 +19,11 @@ interface SQL_StoreInventory {
   store_price: number;
   store_discount: number;
   in_stock: boolean;
+  location: {
+    aisle: string;
+    rack: string;
+    shelf: string;
+  };
 }
 
 export interface SQL_ReceiptStatus {
@@ -100,32 +105,32 @@ export const TABLE_PRODUCT_MASTER: SQL_ProductMaster[] = [
 
 const TABLE_STORE_001_INVENTORY: SQL_StoreInventory[] = [
   // Malad West (Standard Pricing)
-  { product_id: 'prod-001', store_price: 25, store_discount: 10, in_stock: true },
-  { product_id: 'prod-002', store_price: 208, store_discount: 15, in_stock: true },
-  { product_id: 'prod-003', store_price: 110, store_discount: 12, in_stock: true },
-  { product_id: 'prod-004', store_price: 13, store_discount: 7, in_stock: true },
-  { product_id: 'prod-005', store_price: 85, store_discount: 5, in_stock: true },
-  { product_id: 'prod-006', store_price: 105, store_discount: 8, in_stock: true },
+  { product_id: 'prod-001', store_price: 25, store_discount: 10, in_stock: true, location: { aisle: '1', rack: 'A', shelf: '1' } },
+  { product_id: 'prod-002', store_price: 208, store_discount: 15, in_stock: true, location: { aisle: '2', rack: 'B', shelf: '2' } },
+  { product_id: 'prod-003', store_price: 110, store_discount: 12, in_stock: true, location: { aisle: '3', rack: 'C', shelf: '3' } },
+  { product_id: 'prod-004', store_price: 13, store_discount: 7, in_stock: true, location: { aisle: '4', rack: 'D', shelf: '4' } },
+  { product_id: 'prod-005', store_price: 85, store_discount: 5, in_stock: true, location: { aisle: '5', rack: 'E', shelf: '5' } },
+  { product_id: 'prod-006', store_price: 105, store_discount: 8, in_stock: true, location: { aisle: '6', rack: 'F', shelf: '6' } },
 ];
 
 const TABLE_STORE_002_INVENTORY: SQL_StoreInventory[] = [
   // Powai (Premium Pricing ~15% higher)
-  { product_id: 'prod-001', store_price: 30, store_discount: 0, in_stock: true },
-  { product_id: 'prod-002', store_price: 240, store_discount: 2, in_stock: true },
-  { product_id: 'prod-003', store_price: 125, store_discount: 0, in_stock: true }, // Selling at MRP
-  { product_id: 'prod-004', store_price: 14, store_discount: 0, in_stock: true },
-  { product_id: 'prod-005', store_price: 90, store_discount: 0, in_stock: true },
-  { product_id: 'prod-006', store_price: 115, store_discount: 0, in_stock: true },
+  { product_id: 'prod-001', store_price: 30, store_discount: 0, in_stock: true, location: { aisle: '1', rack: 'A', shelf: '1' } },
+  { product_id: 'prod-002', store_price: 240, store_discount: 2, in_stock: true, location: { aisle: '2', rack: 'B', shelf: '2' } },
+  { product_id: 'prod-003', store_price: 125, store_discount: 0, in_stock: true, location: { aisle: '3', rack: 'C', shelf: '3' } }, // Selling at MRP
+  { product_id: 'prod-004', store_price: 14, store_discount: 0, in_stock: true, location: { aisle: '4', rack: 'D', shelf: '4' } },
+  { product_id: 'prod-005', store_price: 90, store_discount: 0, in_stock: true, location: { aisle: '5', rack: 'E', shelf: '5' } },
+  { product_id: 'prod-006', store_price: 115, store_discount: 0, in_stock: true, location: { aisle: '6', rack: 'F', shelf: '6' } },
 ];
 
 const TABLE_STORE_003_INVENTORY: SQL_StoreInventory[] = [
   // Thane (Wholesale Pricing ~10% lower)
-  { product_id: 'prod-001', store_price: 22, store_discount: 20, in_stock: true },
-  { product_id: 'prod-002', store_price: 190, store_discount: 22, in_stock: true },
-  { product_id: 'prod-003', store_price: 100, store_discount: 20, in_stock: true },
-  { product_id: 'prod-004', store_price: 12, store_discount: 14, in_stock: true },
-  { product_id: 'prod-005', store_price: 80, store_discount: 11, in_stock: true },
-  { product_id: 'prod-006', store_price: 95, store_discount: 17, in_stock: true },
+  { product_id: 'prod-001', store_price: 22, store_discount: 20, in_stock: true, location: { aisle: '1', rack: 'A', shelf: '1' } },
+  { product_id: 'prod-002', store_price: 190, store_discount: 22, in_stock: true, location: { aisle: '2', rack: 'B', shelf: '2' } },
+  { product_id: 'prod-003', store_price: 100, store_discount: 20, in_stock: true, location: { aisle: '3', rack: 'C', shelf: '3' } },
+  { product_id: 'prod-004', store_price: 12, store_discount: 14, in_stock: true, location: { aisle: '4', rack: 'D', shelf: '4' } },
+  { product_id: 'prod-005', store_price: 80, store_discount: 11, in_stock: true, location: { aisle: '5', rack: 'E', shelf: '5' } },
+  { product_id: 'prod-006', store_price: 95, store_discount: 17, in_stock: true, location: { aisle: '6', rack: 'F', shelf: '6' } },
 ];
 
 // --- 3. RECEIPT STATUS TABLE (CENTRAL DATABASE) ---

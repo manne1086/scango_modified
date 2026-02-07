@@ -6,10 +6,12 @@ import { rewardService } from '../services/reward.service'; // Keep for blockcha
 import { userApi } from '../services/api';
 
 interface HomeProps {
-    user: User | null;
-    store: Store | null;
-    onChangeScreen: (s: Screen) => void;
-    onLogout: () => void;
+  user: User | null;
+  store: Store | null;
+  cart: CartItem[];
+  totalAmount: number;
+  onChangeScreen: (s: Screen) => void;
+  onLogout: () => void;
 }
 
 export const Home: React.FC<HomeProps> = ({ user, store, onChangeScreen, onLogout }) => {
@@ -79,6 +81,45 @@ export const Home: React.FC<HomeProps> = ({ user, store, onChangeScreen, onLogou
             <button onClick={onLogout} className="mt-auto flex items-center gap-2 text-gray-400 text-xs font-bold uppercase tracking-widest hover:text-red-500 transition pt-6">
                 <LogOut size={14} /> Switch Store
             </button>
+            <span className="text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-tight">
+              Scan
+            </span>
+          </div>
+          <nav className="flex justify-between items-center px-4 py-4 pt-4">
+            <div className="flex flex-1 justify-around pr-8">
+              <button className="flex flex-col items-center gap-0.5 nav-button-active">
+                <span className="material-symbols-outlined">home</span>
+                <span className="text-[10px] font-bold">Home</span>
+              </button>
+              <button
+                onClick={() => onChangeScreen("CATEGORIES")}
+                className="flex flex-col items-center gap-0.5 nav-button-inactive"
+              >
+                <span className="material-symbols-outlined">grid_view</span>
+                <span className="text-[10px] font-bold">Categories</span>
+              </button>
+            </div>
+            <div className="w-16"></div>
+            <div className="flex flex-1 justify-around pl-8">
+              <button
+                onClick={() => onChangeScreen("HISTORY")}
+                className="flex flex-col items-center gap-0.5 nav-button-inactive"
+              >
+                <span className="material-symbols-outlined">history</span>
+                <span className="text-[10px] font-bold">History</span>
+              </button>
+              <button
+                onClick={() => onChangeScreen("PROFILE")}
+                className="flex flex-col items-center gap-0.5 nav-button-inactive"
+              >
+                <span className="material-symbols-outlined">
+                  account_circle
+                </span>
+                <span className="text-[10px] font-bold">Profile</span>
+              </button>
+            </div>
+          </nav>
+          <div className="h-6 bg-white dark:bg-background-dark"></div>
         </div>
     );
 };
